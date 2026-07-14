@@ -5,10 +5,13 @@
  * @package wp-allegro-audience
  */
 
+declare(strict_types=1);
+
 namespace Alley\WP\Allegro_Audience;
 
 use Alley\WP\Allegro_Audience\Features\Allegro_Settings;
 use Alley\WP\Allegro_Audience\Features\Load_Client_Script;
+use Alley\WP\Allegro_Audience\Features\Load_Entries;
 use Alley\WP\Features\Group;
 
 /**
@@ -16,6 +19,7 @@ use Alley\WP\Features\Group;
  */
 function main(): void {
 	$plugin = new Group(
+		new Load_Entries( cache: 'local' !== wp_get_environment_type() ),
 		new Allegro_Settings(),
 		new Load_Client_Script(),
 	);

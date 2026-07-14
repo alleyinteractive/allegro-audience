@@ -1,6 +1,6 @@
 <?php
 /**
- * AllegroSettingsTest
+ * Allegro Audience Tests: Allegro Settings Feature Test
  *
  * @package wp-allegro-audience
  */
@@ -12,6 +12,7 @@ namespace Alley\WP\Allegro_Audience\Tests\Feature;
 use Alley\WP\Allegro_Audience\Features\Allegro_Settings;
 use Alley\WP\Allegro_Audience\Tests\TestCase;
 use Mantle\Testing\Mock_Http_Response;
+use WP_REST_Request;
 
 /**
  * Tests for the Allegro_Settings feature.
@@ -19,78 +20,97 @@ use Mantle\Testing\Mock_Http_Response;
 class AllegroSettingsTest extends TestCase {
 
 	/**
-	 * Feature instance.
+	 * Admin user ID.
+	 *
+	 * @var int
 	 */
-	private Allegro_Settings $feature;
+	private int $admin_id;
 
 	/**
 	 * Set up the test.
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		$this->feature = new Allegro_Settings();
-		$this->feature->boot();
+
+		$this->admin_id = static::factory()->user->create( [ 'role' => 'administrator' ] );
+		wp_set_current_user( $this->admin_id );
+
+		( new Allegro_Settings() )->boot();
+		do_action( 'rest_api_init' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 	}
 
 	/**
-	 * Test that the settings page renders with expected markup.
+	 * Test that the settings page renders the React mount point.
 	 */
 	public function test_settings_page_renders(): void {
-		$this->acting_as( 'administrator' );
-
 		ob_start();
-		$this->feature->render_settings_page();
+		( new Allegro_Settings() )->render_settings_page();
 		$output = (string) ob_get_clean();
 
-		$this->assertStringContainsString( '<form method="post"', $output );
-		$this->assertStringContainsString( 'Save &amp; Verify', $output );
-		$this->assertStringContainsString( 'options.php', $output );
+		$this->assertStringContainsString( 'allegro-settings-app', $output );
 	}
 
 	/**
-	 * Test that an empty value is rejected and returns an empty string.
+	 * Test that the REST endpoint requires authentication.
 	 */
-	public function test_sanitize_tenant_url_rejects_empty(): void {
-		$result = $this->feature->sanitize_tenant_url( '' );
+	public function test_rest_endpoint_requires_auth(): void {
+		wp_set_current_user( 0 );
 
-		$this->assertSame( '', $result );
+		$request = new WP_REST_Request( 'POST', '/wp-allegro-audience/v1/settings' );
+		$request->set_param( 'tenant_url', 'https://example.com' );
+
+		$response = rest_do_request( $request );
+
+		$this->assertSame( 401, $response->get_status() );
 	}
 
 	/**
-	 * Test that a URL without a valid Allegro health response is rejected.
+	 * Test that the REST endpoint rejects an empty URL.
 	 */
-	public function test_sanitize_tenant_url_rejects_non_allegro_url(): void {
+	public function test_rest_endpoint_rejects_empty_url(): void {
+		$request = new WP_REST_Request( 'POST', '/wp-allegro-audience/v1/settings' );
+		$request->set_param( 'tenant_url', '' );
+
+		$response = rest_do_request( $request );
+
+		$this->assertSame( 400, $response->get_status() );
+	}
+
+	/**
+	 * Test that the REST endpoint returns 422 when health check fails.
+	 */
+	public function test_rest_endpoint_rejects_non_allegro_url(): void {
 		$this->fake_request(
-			'https://example.com/up',
+			'https://not-allegro.example.com/up',
 			Mock_Http_Response::create(),
 		);
 
-		update_option( Allegro_Settings::OPTION_TENANT_URL, '' );
+		$request = new WP_REST_Request( 'POST', '/wp-allegro-audience/v1/settings' );
+		$request->set_param( 'tenant_url', 'https://not-allegro.example.com' );
 
-		$result = $this->feature->sanitize_tenant_url( 'https://example.com' );
+		$response = rest_do_request( $request );
 
-		$this->assertSame( '', $result );
-
-		$errors = get_settings_errors( Allegro_Settings::OPTION_TENANT_URL );
-		$this->assertNotEmpty( $errors );
-		$this->assertSame( 'health_check_failed', $errors[0]['code'] );
+		$this->assertSame( 422, $response->get_status() );
 	}
 
 	/**
-	 * Test that a valid Allegro URL (with x-allegro-health: 1) is accepted.
+	 * Test that the REST endpoint saves a valid Allegro URL.
 	 */
-	public function test_sanitize_tenant_url_accepts_valid_allegro_url(): void {
+	public function test_rest_endpoint_saves_valid_url(): void {
 		$this->fake_request(
 			'https://my-org.allegrocdp.com/up',
 			Mock_Http_Response::create()->with_header( 'x-allegro-health', '1' ),
 		);
 
-		$result = $this->feature->sanitize_tenant_url( 'https://my-org.allegrocdp.com/' );
+		$request = new WP_REST_Request( 'POST', '/wp-allegro-audience/v1/settings' );
+		$request->set_param( 'tenant_url', 'https://my-org.allegrocdp.com' );
 
-		$this->assertSame( 'https://my-org.allegrocdp.com', $result );
+		$response = rest_do_request( $request );
 
-		$errors  = get_settings_errors( Allegro_Settings::OPTION_TENANT_URL );
-		$success = array_filter( $errors, fn( $e ) => 'success' === $e['type'] );
-		$this->assertNotEmpty( $success );
+		$this->assertSame( 200, $response->get_status() );
+		$this->assertSame(
+			'https://my-org.allegrocdp.com',
+			get_option( Allegro_Settings::OPTION_TENANT_URL )
+		);
 	}
 }
