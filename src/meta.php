@@ -2,12 +2,12 @@
 /**
  * Contains functions for working with meta.
  *
- * @package create-wordpress-plugin
+ * @package wp-allegro-audience
  */
 
 declare(strict_types=1);
 
-namespace Alley\WP\Create_WordPress_Plugin;
+namespace Alley\WP\Allegro_Audience;
 
 use function Mantle\Support\Helpers\register_meta_from_file;
 

@@ -1,13 +1,13 @@
 <?php
 /**
- * Create WordPress Plugin Tests: Example Unit Test
+ * Allegro Audience Tests: Example Unit Test
  *
- * @package create-wordpress-plugin
+ * @package wp-allegro-audience
  */
 
 declare(strict_types=1);
 
-namespace Alley\WP\Create_WordPress_Plugin\Tests\Unit;
+namespace Alley\WP\Allegro_Audience\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 

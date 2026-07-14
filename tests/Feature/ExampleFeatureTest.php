@@ -1,13 +1,13 @@
 <?php
 /**
- * Create WordPress Plugin Tests: Example Feature Test
+ * Allegro Audience Tests: Example Feature Test
  *
- * @package create-wordpress-plugin
+ * @package wp-allegro-audience
  */
 
-namespace Alley\WP\Create_WordPress_Plugin\Tests\Feature;
+namespace Alley\WP\Allegro_Audience\Tests\Feature;
 
-use Alley\WP\Create_WordPress_Plugin\Tests\TestCase;
+use Alley\WP\Allegro_Audience\Tests\TestCase;
 
 /**
  * A test suite for an example feature.

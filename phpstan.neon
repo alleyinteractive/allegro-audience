@@ -6,10 +6,10 @@ parameters:
 	level: max
 
 	paths:
-		- blocks/
-		- entries/
+		# - blocks/
+		# - entries/
 		- src/
-		- plugin.php
+		- wp-allegro-audience.php
 
 #    ignoreErrors:
 #        - '#PHPDoc tag @var#'

@@ -1,8 +1,8 @@
 <?php
 /**
- * Create WordPress Plugin Tests: Bootstrap
+ * Allegro Audience Tests: Bootstrap
  *
- * @package create-wordpress-plugin
+ * @package wp-allegro-audience
  */
 
 declare(strict_types=1);
@@ -11,8 +11,8 @@ declare(strict_types=1);
  * Visit {@see https://mantle.alley.com/testing/test-framework.html} to learn more.
  */
 \Mantle\Testing\manager()
-	// Rsync the plugin to plugins/create-wordpress-plugin when testing.
+	// Rsync the plugin to plugins/wp-allegro-audience when testing.
 	->maybe_rsync_plugin()
 	// Load the main file of the plugin.
-	->loaded( fn () => require_once __DIR__ . '/../plugin.php' )
+	->loaded( fn () => require_once __DIR__ . '/../wp-allegro-audience.php' )
 	->install();

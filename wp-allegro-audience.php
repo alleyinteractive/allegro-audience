@@ -1,22 +1,22 @@
 <?php
 /**
- * Plugin Name: Create WordPress Plugin
- * Plugin URI: https://github.com/alleyinteractive/create-wordpress-plugin
- * Description: A skeleton WordPress plugin
+ * Plugin Name: Allegro Audience
+ * Plugin URI: https://github.com/alleyinteractive/wp-allegro-audience
+ * Description: WordPress Plugin to include Allegro Audience on your site.
  * Version: 0.0.0
- * Author: author_name
- * Author URI: https://github.com/alleyinteractive/create-wordpress-plugin
+ * Author: Allegro Audience
+ * Author URI: https://github.com/alleyinteractive/wp-allegro-audience
  * Requires at least: 6.5
  * Requires PHP: 8.2
  * Tested up to: 6.8
  *
- * Text Domain: create-wordpress-plugin
+ * Text Domain: wp-allegro-audience
  * Domain Path: /languages/
  *
- * @package create-wordpress-plugin
+ * @package wp-allegro-audience
  */
 
-namespace Alley\WP\Create_WordPress_Plugin;
+namespace Alley\WP\Allegro_Audience;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -25,9 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Root directory to this plugin.
  */
-define( 'CREATE_WORDPRESS_PLUGIN_DIR', __DIR__ );
-
-/* Start Composer Loader */
+define( 'WP_ALLEGRO_AUDIENCE_DIR', __DIR__ );
 
 // Check if Composer is installed (remove if Composer is not required for your plugin).
 if ( ! file_exists( __DIR__ . '/vendor/wordpress-autoload.php' ) ) {
@@ -41,7 +39,7 @@ if ( ! file_exists( __DIR__ . '/vendor/wordpress-autoload.php' ) ) {
 			function () {
 				?>
 				<div class="notice notice-error">
-					<p><?php esc_html_e( 'Composer is not installed and create-wordpress-plugin cannot load. Try using a `*-built` branch if the plugin is being loaded as a submodule.', 'create-wordpress-plugin' ); ?></p>
+					<p><?php esc_html_e( 'Composer is not installed and wp-allegro-audience cannot load. Try using a `*-built` branch if the plugin is being loaded as a submodule.', 'wp-allegro-audience' ); ?></p>
 				</div>
 				<?php
 			}
@@ -54,10 +52,7 @@ if ( ! file_exists( __DIR__ . '/vendor/wordpress-autoload.php' ) ) {
 	require_once __DIR__ . '/vendor/wordpress-autoload.php';
 }
 
-/* End Composer Loader */
-
 // Load the plugin's main files.
-require_once __DIR__ . '/src/assets.php';
 require_once __DIR__ . '/src/meta.php';
 require_once __DIR__ . '/src/main.php';
 

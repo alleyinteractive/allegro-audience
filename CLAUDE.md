@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-A **skeleton/template WordPress plugin** maintained by Alley Interactive. Consumers click "Use template" on GitHub, then run `make` (or `php ./configure.php`) to replace placeholders (plugin name, author, namespace, etc.) throughout the files. Most changes in this repo are to the template itself — keep placeholder tokens like `create-wordpress-plugin`, `Create_WordPress_Plugin`, `author_name`, `author_username` intact unless the task is to change them.
+A **skeleton/template WordPress plugin** maintained by Alley Interactive. Consumers click "Use template" on GitHub, then run `make` (or `php ./configure.php`) to replace placeholders (plugin name, author, namespace, etc.) throughout the files. Most changes in this repo are to the template itself — keep placeholder tokens like `wp-allegro-audience`, `Create_WordPress_Plugin`, `Allegro Audience`, `alleyinteractive` intact unless the task is to change them.
 
 ## Rules
 
@@ -13,7 +13,7 @@ A **skeleton/template WordPress plugin** maintained by Alley Interactive. Consum
 - Do NOT add hooks in procedural files.
 - Do NOT modify placeholder tokens unless instructed.
 - Code in `src/` and `blocks/` should follow WordPress coding standards (via `alleyinteractive/alley-coding-standards`), WordPress file name formats, use strict types, and pass PHPStan level max.
-- Code in `tests/` should extend `tests/TestCase.php`, use Mantle Testkit utilities, and following PSR-4 autoloading (`Alley\WP\Create_WordPress_Plugin\Tests\` → `tests/`).
+- Code in `tests/` should extend `tests/TestCase.php`, use Mantle Testkit utilities, and following PSR-4 autoloading (`Alley\WP\Allegro_Audience\Tests\` → `tests/`).
 - Prefer Mantle APIs over custom implementations.
 - Ensure all PHP passes PHPStan level max.
 - Ensure all linting checks pass (phpcs/phpstan/rector for PHP; eslint/tsc for JS).
@@ -45,7 +45,7 @@ npm run stylelint:fix # auto-fix SCSS lint issues
 npm run packages-update  # update @wordpress/* packages to latest (wp-6.7 dist-tag)
 composer test         # runs @lint then @phpunit
 composer phpunit      # PHPUnit only
-composer phpstan      # PHPStan at level `max` (paths: blocks/, entries/, src/, plugin.php)
+composer phpstan      # PHPStan at level `max` (paths: blocks/, entries/, src/, wp-allegro-audience.php)
 composer phpcs        # alley-coding-standards
 composer rector       # dry-run; `composer rector:fix` to apply
 composer lint:fix     # rector:fix + phpcbf
@@ -64,12 +64,12 @@ npm run scaffold         # run @alleyinteractive/scaffolder (reads .scaffolder/)
 ```
 `.scaffolder/plugin-feature/` generates a new `Feature` class in `src/features/` plus a matching test in `tests/Features/`.
 
-**Release:** `npm run release` bumps the version in `plugin.php` and pushes; GitHub Actions (`built-release.yml`) compiles and tags a `*-built` branch containing the front-end assets.
+**Release:** `npm run release` bumps the version in `wp-allegro-audience.php` and pushes; GitHub Actions (`built-release.yml`) compiles and tags a `*-built` branch containing the front-end assets.
 
 ## Architecture
 
 ### Bootstrap flow
-`plugin.php` (the WordPress entry file) loads Composer's `vendor/wordpress-autoload.php` (from `alleyinteractive/composer-wordpress-autoloader`, which maps `Alley\WP\Create_WordPress_Plugin\` → `src/`), then requires `src/assets.php`, `src/meta.php`, `src/main.php` and calls `main()`, `register_post_meta_from_defs()`, `register_term_meta_from_defs()`.
+`wp-allegro-audience.php` (the WordPress entry file) loads Composer's `vendor/wordpress-autoload.php` (from `alleyinteractive/composer-wordpress-autoloader`, which maps `Alley\WP\Allegro_Audience\` → `src/`), then requires `src/assets.php`, `src/meta.php`, `src/main.php` and calls `main()`, `register_post_meta_from_defs()`, `register_term_meta_from_defs()`.
 
 If `vendor/` is absent but a parent project has already loaded Composer (i.e. the plugin is a Composer dependency), bootstrap continues silently; otherwise an admin notice is shown.
 
@@ -91,15 +91,15 @@ Dynamic blocks live in `blocks/<name>/` (scaffolded by `npm run create-block`).
 
 
 ### Tests
-- PSR-4: `Alley\WP\Create_WordPress_Plugin\Tests\` → `tests/` (note: this is `autoload-dev`, not the runtime autoloader).
+- PSR-4: `Alley\WP\Allegro_Audience\Tests\` → `tests/` (note: this is `autoload-dev`, not the runtime autoloader).
 - Base class: `tests/TestCase.php` extends `Mantle\Testkit\Test_Case` and uses `Prevent_Remote_Requests`. New tests should extend this, not `Test_Case` directly.
 - `tests/bootstrap.php` uses `Mantle\Testing\manager()` with `maybe_rsync_plugin()` — the test runner rsyncs this plugin into a WordPress install before booting.
 - Feature tests live in `tests/Feature/`; unit tests in `tests/Unit/`. Scaffolder generates into `tests/Features/` (note casing difference — scaffolded tests go to a separate dir).
 
 ## Conventions to respect
 
-- PHP 8.2+, WordPress 6.5+ minimum. Strict types, PHPStan **level max** across `blocks/`, `entries/`, `src/`, `plugin.php`. New PHP code must pass level max.
-- Namespace is `Alley\WP\Create_WordPress_Plugin\...` with feature classes under `...\Features\`.
+- PHP 8.2+, WordPress 6.5+ minimum. Strict types, PHPStan **level max** across `blocks/`, `entries/`, `src/`, `wp-allegro-audience.php`. New PHP code must pass level max.
+- Namespace is `Alley\WP\Allegro_Audience\...` with feature classes under `...\Features\`.
 - Coding standard: `alleyinteractive/alley-coding-standards` (WordPress-VIP-flavored). Inline `phpcs:ignore` is used sparingly for unavoidable VIP rules (e.g. dynamic includes in `Load_Entries`).
 - Class files follow WordPress `class-{slug}.php` naming (not PSR-4 filename casing) — the wordpress-autoloader handles both.
 - Node 22 / npm 10 (see `engines` and `.nvmrc`).
