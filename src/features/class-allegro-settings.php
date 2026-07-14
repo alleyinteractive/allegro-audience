@@ -1,6 +1,6 @@
 <?php
 /**
- * Feature: Allegro_Settings
+ * Allegro_Settings class file
  *
  * @package wp-allegro-audience
  */
@@ -20,7 +20,7 @@ use WP_REST_Response;
 class Allegro_Settings implements Feature {
 
 	/**
-	 * Option name for the tenant URL.
+	 * WordPress option name for the tenant URL.
 	 */
 	public const OPTION_TENANT_URL = 'allegro_audience_tenant_url';
 
@@ -30,7 +30,7 @@ class Allegro_Settings implements Feature {
 	private const REST_NAMESPACE = 'wp-allegro-audience/v1';
 
 	/**
-	 * Settings page slug.
+	 * Admin page slug.
 	 */
 	public const PAGE_SLUG = 'allegro-audience';
 
@@ -56,7 +56,7 @@ class Allegro_Settings implements Feature {
 	}
 
 	/**
-	 * Register the REST API route for saving settings.
+	 * Register the REST API route for saving and verifying the tenant URL.
 	 */
 	public function register_rest_routes(): void {
 		register_rest_route(
@@ -79,10 +79,10 @@ class Allegro_Settings implements Feature {
 	}
 
 	/**
-	 * Handle the REST API POST to save and verify the tenant URL.
+	 * Handle the REST API request to save and verify the tenant URL.
 	 *
-	 * @param WP_REST_Request $request The request object.
-	 * @return WP_REST_Response|WP_Error Response on success, WP_Error on failure.
+	 * @param WP_REST_Request $request Incoming request.
+	 * @return WP_REST_Response|WP_Error
 	 */
 	public function rest_save_settings( WP_REST_Request $request ): WP_REST_Response|WP_Error {
 		$raw = $request->get_param( 'tenant_url' );
@@ -92,7 +92,7 @@ class Allegro_Settings implements Feature {
 			return new WP_Error(
 				'invalid_url',
 				__( 'Please provide a valid URL.', 'wp-allegro-audience' ),
-				[ 'status' => 422 ]
+				[ 'status' => 422 ],
 			);
 		}
 
@@ -109,10 +109,18 @@ class Allegro_Settings implements Feature {
 	}
 
 	/**
-	 * Perform a server-side health check by requesting /up and verifying the x-allegro-health header.
+	 * Return the currently saved tenant URL, or an empty string if not set.
+	 */
+	private function get_saved_url(): string {
+		$value = get_option( self::OPTION_TENANT_URL, '' );
+		return is_string( $value ) ? $value : '';
+	}
+
+	/**
+	 * Server-side health check: GET /up and verify the x-allegro-health header equals "1".
 	 *
 	 * @param string $url Tenant base URL.
-	 * @return true|WP_Error True on success, WP_Error on failure.
+	 * @return true|WP_Error
 	 */
 	private function check_health( string $url ): true|WP_Error {
 		$response = wp_remote_get( "{$url}/up" ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
@@ -134,16 +142,217 @@ class Allegro_Settings implements Feature {
 	}
 
 	/**
-	 * Render the settings page — outputs the React app mount point.
+	 * Render the settings page.
 	 */
 	public function render_settings_page(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
+
+		$tenant_url = $this->get_saved_url();
+		$config     = wp_json_encode(
+			[
+				'tenantUrl' => $tenant_url,
+				'restUrl'   => rest_url( self::REST_NAMESPACE . '/settings' ),
+				'nonce'     => wp_create_nonce( 'wp_rest' ),
+				'docsUrl'   => 'https://docs.allegrocdp.com/developer/',
+				'l10n'      => [
+					'saving'         => __( 'Saving…', 'wp-allegro-audience' ),
+					'saveVerify'     => __( 'Save & Verify', 'wp-allegro-audience' ),
+					'notConfigured'  => __( 'Not configured', 'wp-allegro-audience' ),
+					'connected'      => __( '● Connected', 'wp-allegro-audience' ),
+					'corsWarning'    => __( '⚠ CORS not configured', 'wp-allegro-audience' ),
+					'successMessage' => __( 'Allegro Audience is connected. client.js will be loaded on every front-end page.', 'wp-allegro-audience' ),
+					'corsMessage'    => __( 'CORS is not configured for this domain. Your Allegro instance needs to allow cross-origin requests from this WordPress site. ', 'wp-allegro-audience' ),
+					'docsLinkText'   => __( 'View developer documentation', 'wp-allegro-audience' ),
+					'networkError'   => __( 'Could not reach the Allegro instance. Please check the URL and try again.', 'wp-allegro-audience' ),
+				],
+			]
+		);
 		?>
-<div class="wrap">
-<div id="allegro-settings-app"></div>
-</div>
+		<div class="wrap">
+			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+
+			<div class="card allegro-card">
+				<h2>
+					<?php esc_html_e( 'Connection Settings', 'wp-allegro-audience' ); ?>
+					<span id="allegro-badge"></span>
+				</h2>
+
+				<table class="form-table" role="presentation">
+					<tr>
+						<th scope="row">
+							<label for="allegro-tenant-url">
+								<?php esc_html_e( 'Allegro Organization URL', 'wp-allegro-audience' ); ?>
+							</label>
+						</th>
+						<td>
+							<input
+								type="url"
+								id="allegro-tenant-url"
+								class="regular-text"
+								value="<?php echo esc_attr( $tenant_url ); ?>"
+								placeholder="https://your-org.allegrocdp.com"
+							/>
+							<p class="description">
+								<?php esc_html_e( 'The base URL of your Allegro CDP instance.', 'wp-allegro-audience' ); ?>
+							</p>
+						</td>
+					</tr>
+				</table>
+
+				<p>
+					<button id="allegro-save-btn" class="button button-primary" type="button">
+						<?php esc_html_e( 'Save & Verify', 'wp-allegro-audience' ); ?>
+					</button>
+				</p>
+
+				<div id="allegro-steps">
+					<div id="allegro-step-health" class="allegro-step">
+						<span class="allegro-step-icon"></span>
+						<span><?php esc_html_e( 'Server health check', 'wp-allegro-audience' ); ?></span>
+					</div>
+					<div id="allegro-step-cors" class="allegro-step">
+						<span class="allegro-step-icon"></span>
+						<span><?php esc_html_e( 'CORS configuration', 'wp-allegro-audience' ); ?></span>
+					</div>
+				</div>
+
+				<div id="allegro-notice" role="alert"></div>
+			</div>
+		</div>
+
+		<style>
+		.allegro-card { max-width: 640px; padding: 16px 20px; }
+		.allegro-card h2 { display: flex; align-items: center; justify-content: space-between; margin-top: 0; font-size: 14px; }
+		#allegro-badge { font-size: 12px; font-weight: 500; padding: 2px 10px; border-radius: 3px; }
+		#allegro-badge.badge-not-configured { background: #dcdcde; color: #50575e; }
+		#allegro-badge.badge-connected { background: #d8f0d8; color: #1a6a1a; }
+		#allegro-badge.badge-cors-warning { background: #fcf0d8; color: #8a5c0a; }
+		#allegro-steps { display: none; margin: 12px 0 0; border-left: 3px solid #dcdcde; padding-left: 12px; }
+		.allegro-step { display: none; align-items: center; gap: 8px; margin: 6px 0; font-size: 13px; }
+		.allegro-step-icon { display: flex; align-items: center; width: 20px; }
+		#allegro-notice .notice { margin: 12px 0 0; }
+		</style>
 		<?php
+		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+		wp_print_inline_script_tag( $this->inline_script( $config !== false ? $config : '{}' ) );
+		// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+
+	/**
+	 * Return the inline JavaScript for the settings page.
+	 *
+	 * @param string $config JSON-encoded configuration object.
+	 * @return string
+	 */
+	private function inline_script( string $config ): string {
+		return <<<JS
+(function () {
+	var cfg = {$config};
+	var btn = document.getElementById('allegro-save-btn');
+	var input = document.getElementById('allegro-tenant-url');
+	var stepsEl = document.getElementById('allegro-steps');
+	var stepHealth = document.getElementById('allegro-step-health');
+	var stepCors = document.getElementById('allegro-step-cors');
+	var noticeEl = document.getElementById('allegro-notice');
+	var badge = document.getElementById('allegro-badge');
+
+	function setBadge(state) {
+		badge.className = 'badge-' + state;
+		badge.textContent = cfg.l10n[state === 'connected' ? 'connected' : state === 'corsWarning' ? 'corsWarning' : 'notConfigured'];
+	}
+
+	function setStep(el, status) {
+		el.style.display = 'flex';
+		var icon = el.querySelector('.allegro-step-icon');
+		if (status === 'pending') {
+			icon.innerHTML = '<span class="spinner is-active" style="float:none;margin:0;"></span>';
+		} else if (status === 'success') {
+			icon.innerHTML = '<span style="color:#00a32a;font-weight:700;">&#10003;</span>';
+		} else {
+			icon.innerHTML = '<span style="color:#d63638;font-weight:700;">&#10007;</span>';
+		}
+	}
+
+	function showNotice(type, html) {
+		noticeEl.innerHTML = '<div class="notice notice-' + type + ' inline"><p>' + html + '</p></div>';
+	}
+
+	function resetSteps() {
+		stepsEl.style.display = 'none';
+		stepHealth.style.display = 'none';
+		stepCors.style.display = 'none';
+		noticeEl.innerHTML = '';
+	}
+
+	// Show initial badge; auto-run CORS check if a URL is already saved.
+	if (cfg.tenantUrl) {
+		setBadge('notConfigured');
+		fetch(cfg.tenantUrl + '/client.js', { mode: 'cors', cache: 'no-store' })
+			.then(function () { setBadge('connected'); })
+			.catch(function () { setBadge('corsWarning'); });
+	} else {
+		setBadge('notConfigured');
+	}
+
+	btn.addEventListener('click', function () {
+		var url = input.value.trim().replace(/\/+$/, '');
+		if (!url) return;
+
+		btn.disabled = true;
+		btn.textContent = cfg.l10n.saving;
+		resetSteps();
+		stepsEl.style.display = 'block';
+		setStep(stepHealth, 'pending');
+
+		fetch(cfg.restUrl, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': cfg.nonce },
+			body: JSON.stringify({ tenant_url: url }),
+		})
+		.then(function (res) {
+			return res.json().then(function (data) { return { ok: res.ok, data: data }; });
+		})
+		.then(function (result) {
+			if (!result.ok) {
+				setStep(stepHealth, 'error');
+				showNotice('error', result.data.message || cfg.l10n.networkError);
+				btn.disabled = false;
+				btn.textContent = cfg.l10n.saveVerify;
+				return;
+			}
+
+			setStep(stepHealth, 'success');
+			setStep(stepCors, 'pending');
+
+			fetch(url + '/client.js', { mode: 'cors', cache: 'no-store' })
+				.then(function () {
+					setStep(stepCors, 'success');
+					setBadge('connected');
+					showNotice('success', cfg.l10n.successMessage);
+				})
+				.catch(function () {
+					setStep(stepCors, 'error');
+					setBadge('corsWarning');
+					showNotice('warning',
+						cfg.l10n.corsMessage +
+						'<a href="' + cfg.docsUrl + '" target="_blank" rel="noopener noreferrer">' + cfg.l10n.docsLinkText + '</a>.'
+					);
+				})
+				.finally(function () {
+					btn.disabled = false;
+					btn.textContent = cfg.l10n.saveVerify;
+				});
+		})
+		.catch(function () {
+			setStep(stepHealth, 'error');
+			showNotice('error', cfg.l10n.networkError);
+			btn.disabled = false;
+			btn.textContent = cfg.l10n.saveVerify;
+		});
+	});
+}());
+JS;
 	}
 }
