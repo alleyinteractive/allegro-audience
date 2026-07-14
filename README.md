@@ -2,13 +2,13 @@
 
 Contributors: alleyinteractive
 
-Tags: alleyinteractive, wp-allegro-audience
+Tags: alleyinteractive, allegro, cdp, audience
 
 Stable tag: 0.0.0
 
-Requires at least: 6.3
+Requires at least: 6.5
 
-Tested up to: 6.7
+Tested up to: 6.8
 
 Requires PHP: 8.2
 
@@ -16,100 +16,50 @@ License: GPL v2 or later
 
 [![Testing Suite](https://github.com/alleyinteractive/wp-allegro-audience/actions/workflows/all-pr-tests.yml/badge.svg?branch=develop)](https://github.com/alleyinteractive/wp-allegro-audience/actions/workflows/all-pr-tests.yml)
 
-WordPress Plugin to include Allegro Audience on your site..
+WordPress plugin to connect your site to an [Allegro CDP](https://allegrocdp.com/) instance. Provides a simple settings page where you enter your Allegro organization URL. The plugin validates the connection and then injects the Allegro `client.js` script on every page of your site.
 
 ## Installation
 
-You can install the package via Composer:
+Install via Composer:
 
 ```bash
 composer require alleyinteractive/wp-allegro-audience
 ```
 
-## Usage
+Or upload the plugin ZIP through **Plugins → Add New** in WordPress.
 
-Activate the plugin in WordPress and use it like so:
+## Configuration
 
-```php
-$plugin = Create_WordPress_Plugin\Allegro_Audience\Allegro_Audience();
-$plugin->perform_magic();
-```
+1. Activate the plugin.
+2. Go to **Settings → Allegro Audience**.
+3. Enter your Allegro organization URL (e.g. `https://your-org.allegrocdp.com`).
+4. Click **Save & Verify** — the plugin will confirm the URL is a live Allegro instance.
+5. Once verified, `client.js` will be injected automatically on every front-end page.
+
+## How it works
+
+- **Health check** — on save, the plugin sends a server-side request to `<org-url>/up` and looks for the `x-allegro-health: 1` response header to confirm the URL points to an Allegro instance.
+- **Script injection** — after a successful health check, the plugin outputs `<script src="<org-url>/client.js"></script>` in the front-end `<head>`.
 
 ## Development
 
-To setup a WordPress installation and run the plugin in a local environment, you
-can use `wp-env` via the `composer dev` command:
+```sh
+composer install
+composer serve   # starts wp-env
+```
+
+Run tests and linting:
 
 ```sh
-npm install
-composer dev
+composer test       # lint + PHPUnit
+composer phpunit    # PHPUnit only
+composer phpstan    # static analysis (level max)
+composer phpcs      # coding standards
 ```
 
-The command will start a local WordPress environment with the plugin activated
-while also running the front-end assets build process. You can also run `npm run
-start` to start the front-end assets build process separately. The front-end
-assets will be compiled into the `build` directory and will be enqueued
-automatically by the plugin.
+## Releasing
 
-## Registering Meta
-
-The plugin supports registering post and term meta via JSON files located in the
-`config` directory. Out of the box, the plugin will look for
-`config/post-meta.json` for post meta and `config/term-meta.json` for term meta.
-
-```json
-{
-  "$schema": "https://raw.githubusercontent.com/alleyinteractive/mantle-framework/HEAD/src/mantle/support/schema/meta.json",
-  "example_meta_key": {
-    "post_types": "article",
-    "type": "string"
-  },
-  "another_meta_key": {
-    "post_types": [ "article", "page" ],
-    "type": "number",
-    "single": false,
-    "default": 0
-  }
-}
-```
-
-For more information on how to register meta via JSON files,
-[see the documentation](https://mantle.alley.com/docs/features/support/helpers#register_meta_from_file).
-
-## Testing
-
-Run `composer test` to run tests against PHPUnit and the PHP code in the plugin.
-Unit testing code is written in PSR-4 format and can be found in the `tests`
-directory.
-
-## Releasing the Plugin
-
-The plugin uses
-[action-release](https://github.com/alleyinteractive/action-release) via a
-[built release workflow](./.github/workflows/built-release.yml) to compile and
-tag releases. Whenever a new version is detected in the root plugin's headers in
-the `wp-allegro-audience.php` file or in the `composer.json` file, the workflow will
-automatically build the plugin and tag it with a new version. The built tag will
-contain all the required front-end assets the plugin may require. This works
-well for publishing to WordPress.org or for submodule-ing.
-
-When you are ready to release a new version of the plugin, you can run
-`npm run release`/`composer release` to start the process of setting up a new
-release. If you want to do this manually you can follow these steps:
-
-1. Change the `Version` in the `wp-allegro-audience.php` file to a new higher-level version.
-
-	```diff
-	- * Version: 0.0.0
-	+ * Version: 0.0.1
-	```
-
-	**✨ `npm run release` will do this for you automatically.**
-
-2. Commit your changes and push to the repository.
-3. Check the actions tab in the repository to see the progress of the release.
-   The action will automatically create a new tag and release for the plugin.
-   You are done!
+Run `npm run release` to bump the version and trigger the built-release workflow, which compiles the plugin and creates a versioned tag containing all required assets.
 
 ## Changelog
 
@@ -117,12 +67,7 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 ## Credits
 
-This project is actively maintained by [Alley
-Interactive](https://github.com/alleyinteractive). Like what you see? [Come work
-with us](https://alley.com/careers/).
-
-- [Allegro Audience](https://github.com/alleyinteractive)
-- [All Contributors](../../contributors)
+Maintained by [Alley Interactive](https://alley.com/). Like what you see? [Come work with us](https://alley.com/careers/).
 
 ## License
 
