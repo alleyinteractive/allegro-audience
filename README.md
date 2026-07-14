@@ -1,7 +1,9 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://docs.allegrocdp.com/img/allegro-logo-horizontal-white.svg">
-  <img alt="Allegro Audience" src="https://docs.allegrocdp.com/img/allegro-logo-horizontal-black.svg" height="40">
-</picture>
+<div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://docs.allegrocdp.com/img/allegro-logo-horizontal-white.svg">
+    <img alt="Allegro Audience" src="https://docs.allegrocdp.com/img/allegro-logo-horizontal-black.svg" height="40">
+  </picture>
+</div>
 
 # Allegro Audience WordPress Plugin
 
