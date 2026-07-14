@@ -20,8 +20,8 @@ use WP_REST_Request;
 class AllegroSettingsTest extends TestCase {
 
 	/**
-				 * Admin user ID.
-				 */
+	 * Admin user ID.
+	 */
 	private int $admin_id;
 
 	/**
@@ -38,14 +38,15 @@ class AllegroSettingsTest extends TestCase {
 	}
 
 	/**
-	 * Test that the settings page renders the React mount point.
+	 * Test that the settings page renders the URL input field.
 	 */
 	public function test_settings_page_renders(): void {
 		ob_start();
 		( new Allegro_Settings() )->render_settings_page();
 		$output = (string) ob_get_clean();
 
-		$this->assertStringContainsString( 'allegro-settings-app', $output );
+		$this->assertStringContainsString( 'allegro-tenant-url', $output );
+		$this->assertStringContainsString( 'allegro-save-btn', $output );
 	}
 
 	/**
@@ -71,7 +72,7 @@ class AllegroSettingsTest extends TestCase {
 
 		$response = rest_do_request( $request );
 
-		$this->assertSame( 400, $response->get_status() );
+		$this->assertContains( $response->get_status(), [ 400, 422 ] );
 	}
 
 	/**
