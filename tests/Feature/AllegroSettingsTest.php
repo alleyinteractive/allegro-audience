@@ -20,10 +20,8 @@ use WP_REST_Request;
 class AllegroSettingsTest extends TestCase {
 
 	/**
-	 * Admin user ID.
-	 *
-	 * @var int
-	 */
+				 * Admin user ID.
+				 */
 	private int $admin_id;
 
 	/**

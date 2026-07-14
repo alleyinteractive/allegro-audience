@@ -27,7 +27,7 @@ class Allegro_Settings implements Feature {
 	/**
 	 * REST API namespace.
 	 */
-	private const REST_NAMESPACE = 'wp-allegro-audience/v1';
+	private const string REST_NAMESPACE = 'wp-allegro-audience/v1';
 
 	/**
 	 * Admin page slug.
@@ -38,8 +38,8 @@ class Allegro_Settings implements Feature {
 	 * Boot the feature.
 	 */
 	public function boot(): void {
-		add_action( 'admin_menu', [ $this, 'add_settings_page' ] );
-		add_action( 'rest_api_init', [ $this, 'register_rest_routes' ] );
+		add_action( 'admin_menu', $this->add_settings_page( ... ) );
+		add_action( 'rest_api_init', $this->register_rest_routes( ... ) );
 	}
 
 	/**
@@ -51,7 +51,7 @@ class Allegro_Settings implements Feature {
 			__( 'Allegro Audience', 'wp-allegro-audience' ),
 			'manage_options',
 			self::PAGE_SLUG,
-			[ $this, 'render_settings_page' ],
+			$this->render_settings_page( ... ),
 		);
 	}
 
@@ -82,7 +82,6 @@ class Allegro_Settings implements Feature {
 	 * Handle the REST API request to save and verify the tenant URL.
 	 *
 	 * @param WP_REST_Request $request Incoming request.
-	 * @return WP_REST_Response|WP_Error
 	 */
 	public function rest_save_settings( WP_REST_Request $request ): WP_REST_Response|WP_Error {
 		$raw = $request->get_param( 'tenant_url' );
@@ -120,7 +119,6 @@ class Allegro_Settings implements Feature {
 	 * Server-side health check: GET /up and verify the x-allegro-health header equals "1".
 	 *
 	 * @param string $url Tenant base URL.
-	 * @return true|WP_Error
 	 */
 	private function check_health( string $url ): true|WP_Error {
 		$response = wp_remote_get( "{$url}/up" ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
@@ -244,7 +242,6 @@ class Allegro_Settings implements Feature {
 	 * Return the inline JavaScript for the settings page.
 	 *
 	 * @param string $config JSON-encoded configuration object.
-	 * @return string
 	 */
 	private function inline_script( string $config ): string {
 		return <<<JS

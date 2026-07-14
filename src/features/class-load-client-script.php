@@ -20,7 +20,7 @@ class Load_Client_Script implements Feature {
 	 * Boot the feature.
 	 */
 	public function boot(): void {
-		add_action( 'wp_head', [ $this, 'output_client_script' ], 1 );
+		add_action( 'wp_head', $this->output_client_script( ... ), 1 );
 	}
 
 	/**
