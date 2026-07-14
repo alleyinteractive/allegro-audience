@@ -1,8 +1,13 @@
-# Allegro Audience
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://docs.allegrocdp.com/img/allegro-logo-horizontal-white.svg">
+  <img alt="Allegro Audience" src="https://docs.allegrocdp.com/img/allegro-logo-horizontal-black.svg" height="40">
+</picture>
+
+# Allegro Audience WordPress Plugin
 
 Contributors: alleyinteractive
 
-Tags: alleyinteractive, allegro, cdp, audience
+Tags: alleyinteractive, allegro, audience
 
 Stable tag: 0.1.0
 
@@ -16,7 +21,7 @@ License: GPL v2 or later
 
 [![Testing Suite](https://github.com/alleyinteractive/wp-allegro-audience/actions/workflows/all-pr-tests.yml/badge.svg?branch=develop)](https://github.com/alleyinteractive/wp-allegro-audience/actions/workflows/all-pr-tests.yml)
 
-WordPress plugin to connect your site to an [Allegro CDP](https://allegrocdp.com/) instance. Provides a simple settings page where you enter your Allegro organization URL. The plugin validates the connection and then injects the Allegro `client.js` script on every page of your site.
+Connect your WordPress site to [Allegro Audience](https://allegrocdp.com/). Enter your organization URL, verify the connection, and Allegro Audience's `client.js` is automatically injected on every front-end page.
 
 ## Installation
 
@@ -32,14 +37,15 @@ Or upload the plugin ZIP through **Plugins → Add New** in WordPress.
 
 1. Activate the plugin.
 2. Go to **Settings → Allegro Audience**.
-3. Enter your Allegro organization URL (e.g. `https://your-org.allegrocdp.com`).
-4. Click **Save & Verify** — the plugin will confirm the URL is a live Allegro instance.
-5. Once verified, `client.js` will be injected automatically on every front-end page.
+3. Enter your Allegro Audience organization URL (e.g. `https://your-org.allegrocdp.com`).
+4. Click **Save & Verify** — the plugin confirms the URL is a live Allegro Audience instance and checks that CORS is configured for your domain.
+5. Once verified, `client.js` is injected automatically on every front-end page.
 
 ## How it works
 
-- **Health check** — on save, the plugin sends a server-side request to `<org-url>/up` and looks for the `x-allegro-health: 1` response header to confirm the URL points to an Allegro instance.
-- **Script injection** — after a successful health check, the plugin outputs `<script src="<org-url>/client.js"></script>` in the front-end `<head>`.
+- **Health check** — on save, the plugin makes a server-side request to `<org-url>/up` and verifies the `x-allegro-health: 1` response header.
+- **CORS check** — the browser fetches `<org-url>/client.js` directly to confirm cross-origin access is configured. If it isn't, the settings page shows a warning with a link to the [Allegro Audience developer docs](https://docs.allegrocdp.com/developer/).
+- **Script injection** — once verified, `<script src="<org-url>/client.js"></script>` is output in `wp_head` on every front-end page.
 
 ## Development
 
@@ -59,7 +65,7 @@ composer phpcs      # coding standards
 
 ## Releasing
 
-Run `npm run release` to bump the version and trigger the built-release workflow, which compiles the plugin and creates a versioned tag containing all required assets.
+Run `npm run release` to bump the version and trigger the built-release workflow, which creates a versioned tag.
 
 ## Changelog
 
