@@ -40,6 +40,7 @@ class Allegro_Settings implements Feature {
 	public function boot(): void {
 		add_action( 'admin_menu', $this->add_settings_page( ... ) );
 		add_action( 'rest_api_init', $this->register_rest_routes( ... ) );
+		add_filter( 'plugin_action_links_wp-allegro-audience/wp-allegro-audience.php', $this->add_settings_link( ... ) );
 	}
 
 	/**
@@ -53,6 +54,24 @@ class Allegro_Settings implements Feature {
 			self::PAGE_SLUG,
 			$this->render_settings_page( ... ),
 		);
+	}
+
+	/**
+	 * Add a Settings link to the plugin's action links on the Plugins screen.
+	 *
+	 * @param string[] $links Existing action links.
+	 * @return string[]
+	 */
+	public function add_settings_link( $links ): array {
+		$settings_link = sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( admin_url( 'options-general.php?page=' . self::PAGE_SLUG ) ),
+			__( 'Settings', 'wp-allegro-audience' ),
+		);
+
+		array_unshift( $links, $settings_link );
+
+		return $links;
 	}
 
 	/**
