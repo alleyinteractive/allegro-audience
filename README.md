@@ -1,9 +1,15 @@
-<div align="center">
+<p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://docs.allegrocdp.com/img/allegro-logo-horizontal-white.svg">
-    <img alt="Allegro Audience" src="https://docs.allegrocdp.com/img/allegro-logo-horizontal-black.svg" height="40">
+    <source media="(prefers-color-scheme: dark)" srcset="https://allegroaudience.com/assets/logo-nav-dark.svg">
+    <img alt="Allegro Audience" src="https://allegroaudience.com/assets/logo-nav-light.svg" width="400">
   </picture>
-</div>
+</p>
+
+<p align="center">
+	<a href="https://allegroaudience.com/">Homepage</a>
+	—
+	<a href="https://docs.allegrocdp.com/">Documentation</a>
+</p>
 
 # Allegro Audience WordPress Plugin
 
