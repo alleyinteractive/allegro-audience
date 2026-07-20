@@ -1,115 +1,79 @@
-# Allegro Audience
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://allegroaudience.com/assets/logo-nav-dark.svg">
+    <img alt="Allegro Audience" src="https://allegroaudience.com/assets/logo-nav-light.svg" width="400">
+  </picture>
+</p>
+
+<p align="center">
+	<a href="https://allegroaudience.com/">Homepage</a>
+	—
+	<a href="https://docs.allegrocdp.com/">Documentation</a>
+</p>
+
+# Allegro Audience WordPress Plugin
 
 Contributors: alleyinteractive
 
-Tags: alleyinteractive, wp-allegro-audience
+Tags: alleyinteractive, allegro, audience
 
-Stable tag: 0.0.0
+Stable tag: 0.1.0
 
-Requires at least: 6.3
+Requires at least: 6.5
 
-Tested up to: 6.7
+Tested up to: 6.8
 
-Requires PHP: 8.2
+Requires PHP: 8.3
 
 License: GPL v2 or later
 
 [![Testing Suite](https://github.com/alleyinteractive/wp-allegro-audience/actions/workflows/all-pr-tests.yml/badge.svg?branch=develop)](https://github.com/alleyinteractive/wp-allegro-audience/actions/workflows/all-pr-tests.yml)
 
-WordPress Plugin to include Allegro Audience on your site..
+Connect your WordPress site to [Allegro Audience](https://allegrocdp.com/). Enter your organization URL, verify the connection, and Allegro Audience's `client.js` is automatically injected on every front-end page.
 
 ## Installation
 
-You can install the package via Composer:
+Install via Composer:
 
 ```bash
 composer require alleyinteractive/wp-allegro-audience
 ```
 
-## Usage
+Or upload the plugin ZIP through **Plugins → Add New** in WordPress.
 
-Activate the plugin in WordPress and use it like so:
+## Configuration
 
-```php
-$plugin = Create_WordPress_Plugin\Allegro_Audience\Allegro_Audience();
-$plugin->perform_magic();
-```
+1. Activate the plugin.
+2. Go to **Settings → Allegro Audience**.
+3. Enter your Allegro Audience organization URL (e.g. `https://your-org.allegrocdp.com`).
+4. Click **Save & Verify** — the plugin confirms the URL is a live Allegro Audience instance and checks that CORS is configured for your domain.
+5. Once verified, `client.js` is injected automatically on every front-end page.
+
+## How it works
+
+- **Health check** — on save, the plugin makes a server-side request to `<org-url>/up` and verifies the `x-allegro-health: 1` response header.
+- **CORS check** — the browser fetches `<org-url>/client.js` directly to confirm cross-origin access is configured. If it isn't, the settings page shows a warning with a link to the [Allegro Audience developer docs](https://docs.allegrocdp.com/developer/).
+- **Script injection** — once verified, `<script src="<org-url>/client.js"></script>` is output in `wp_head` on every front-end page.
 
 ## Development
 
-To setup a WordPress installation and run the plugin in a local environment, you
-can use `wp-env` via the `composer dev` command:
+```sh
+composer install
+composer serve   # starts wp-env
+```
+
+Run tests and linting:
 
 ```sh
-npm install
-composer dev
+composer test       # lint + PHPUnit
+composer phpunit    # PHPUnit only
+composer phpstan    # static analysis (level max)
+composer phpcs      # coding standards
 ```
 
-The command will start a local WordPress environment with the plugin activated
-while also running the front-end assets build process. You can also run `npm run
-start` to start the front-end assets build process separately. The front-end
-assets will be compiled into the `build` directory and will be enqueued
-automatically by the plugin.
+## Releasing
 
-## Registering Meta
-
-The plugin supports registering post and term meta via JSON files located in the
-`config` directory. Out of the box, the plugin will look for
-`config/post-meta.json` for post meta and `config/term-meta.json` for term meta.
-
-```json
-{
-  "$schema": "https://raw.githubusercontent.com/alleyinteractive/mantle-framework/HEAD/src/mantle/support/schema/meta.json",
-  "example_meta_key": {
-    "post_types": "article",
-    "type": "string"
-  },
-  "another_meta_key": {
-    "post_types": [ "article", "page" ],
-    "type": "number",
-    "single": false,
-    "default": 0
-  }
-}
-```
-
-For more information on how to register meta via JSON files,
-[see the documentation](https://mantle.alley.com/docs/features/support/helpers#register_meta_from_file).
-
-## Testing
-
-Run `composer test` to run tests against PHPUnit and the PHP code in the plugin.
-Unit testing code is written in PSR-4 format and can be found in the `tests`
-directory.
-
-## Releasing the Plugin
-
-The plugin uses
-[action-release](https://github.com/alleyinteractive/action-release) via a
-[built release workflow](./.github/workflows/built-release.yml) to compile and
-tag releases. Whenever a new version is detected in the root plugin's headers in
-the `wp-allegro-audience.php` file or in the `composer.json` file, the workflow will
-automatically build the plugin and tag it with a new version. The built tag will
-contain all the required front-end assets the plugin may require. This works
-well for publishing to WordPress.org or for submodule-ing.
-
-When you are ready to release a new version of the plugin, you can run
-`npm run release`/`composer release` to start the process of setting up a new
-release. If you want to do this manually you can follow these steps:
-
-1. Change the `Version` in the `wp-allegro-audience.php` file to a new higher-level version.
-
-	```diff
-	- * Version: 0.0.0
-	+ * Version: 0.0.1
-	```
-
-	**✨ `npm run release` will do this for you automatically.**
-
-2. Commit your changes and push to the repository.
-3. Check the actions tab in the repository to see the progress of the release.
-   The action will automatically create a new tag and release for the plugin.
-   You are done!
+Run `npm run release` to bump the version and trigger the built-release workflow, which creates a versioned tag.
 
 ## Changelog
 
@@ -117,12 +81,7 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 ## Credits
 
-This project is actively maintained by [Alley
-Interactive](https://github.com/alleyinteractive). Like what you see? [Come work
-with us](https://alley.com/careers/).
-
-- [Allegro Audience](https://github.com/alleyinteractive)
-- [All Contributors](../../contributors)
+Maintained by [Alley Interactive](https://alley.com/). Like what you see? [Come work with us](https://alley.com/careers/).
 
 ## License
 

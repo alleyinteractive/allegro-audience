@@ -3,11 +3,11 @@
  * Plugin Name: Allegro Audience
  * Plugin URI: https://github.com/alleyinteractive/wp-allegro-audience
  * Description: WordPress Plugin to include Allegro Audience on your site.
- * Version: 0.0.0
+ * Version: 0.1.0
  * Author: Allegro Audience
  * Author URI: https://github.com/alleyinteractive/wp-allegro-audience
  * Requires at least: 6.5
- * Requires PHP: 8.2
+ * Requires PHP: 8.3
  * Tested up to: 6.8
  *
  * Text Domain: wp-allegro-audience
@@ -53,9 +53,6 @@ if ( ! file_exists( __DIR__ . '/vendor/wordpress-autoload.php' ) ) {
 }
 
 // Load the plugin's main files.
-require_once __DIR__ . '/src/meta.php';
 require_once __DIR__ . '/src/main.php';
 
-register_post_meta_from_defs();
-register_term_meta_from_defs();
 main();

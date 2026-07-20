@@ -15,10 +15,9 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "alleyinteractive/composer-wordpress-autoloader": "^1.0",
-        "alleyinteractive/wp-type-extensions": "^4.0",
-        "mantle-framework/support": "^1.15"
+        "alleyinteractive/wp-type-extensions": "^4.0"
     },
     "require-dev": {
         "alleyinteractive/alley-coding-standards": "^2.0",
