@@ -8,7 +8,7 @@
  * Author URI: https://github.com/alleyinteractive/wp-allegro-audience
  * Requires at least: 6.5
  * Requires PHP: 8.3
- * Tested up to: 6.8
+ * Tested up to: 7.0
  *
  * Text Domain: wp-allegro-audience
  * Domain Path: /languages/

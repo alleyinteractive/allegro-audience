@@ -240,16 +240,16 @@ class Allegro_Settings implements Feature {
 		</div>
 
 		<style>
-		.allegro-card { max-width: 640px; padding: 16px 20px; }
-		.allegro-card h2 { display: flex; align-items: center; justify-content: space-between; margin-top: 0; font-size: 14px; }
-		#allegro-badge { font-size: 12px; font-weight: 500; padding: 2px 10px; border-radius: 3px; }
-		#allegro-badge.badge-not-configured { background: #dcdcde; color: #50575e; }
-		#allegro-badge.badge-connected { background: #d8f0d8; color: #1a6a1a; }
-		#allegro-badge.badge-cors-warning { background: #fcf0d8; color: #8a5c0a; }
-		#allegro-steps { display: none; margin: 12px 0 0; border-left: 3px solid #dcdcde; padding-left: 12px; }
-		.allegro-step { display: none; align-items: center; gap: 8px; margin: 6px 0; font-size: 13px; }
-		.allegro-step-icon { display: flex; align-items: center; width: 20px; }
-		#allegro-notice .notice { margin: 12px 0 0; }
+			.allegro-card { max-width: 640px; padding: 16px 20px; }
+			.allegro-card h2 { display: flex; align-items: center; justify-content: space-between; margin-top: 0; font-size: 14px; }
+			#allegro-badge { font-size: 12px; font-weight: 500; padding: 2px 10px; border-radius: 3px; }
+			#allegro-badge.badge-not-configured { background: #dcdcde; color: #50575e; }
+			#allegro-badge.badge-connected { background: #d8f0d8; color: #1a6a1a; }
+			#allegro-badge.badge-cors-warning { background: #fcf0d8; color: #8a5c0a; }
+			#allegro-steps { display: none; margin: 12px 0 0; border-left: 3px solid #dcdcde; padding-left: 12px; }
+			.allegro-step { display: none; align-items: center; gap: 8px; margin: 6px 0; font-size: 13px; }
+			.allegro-step-icon { display: flex; align-items: center; width: 20px; }
+			#allegro-notice .notice { margin: 12px 0 0; }
 		</style>
 		<?php
 		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -291,7 +291,14 @@ class Allegro_Settings implements Feature {
 		}
 	}
 
-	function showNotice(type, html) {
+	function escapeHtml(str) {
+		return String(str).replace(/[&<>"']/g, function (ch) {
+			return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
+		});
+	}
+
+	function showNotice(type, message, linkHtml) {
+		var html = escapeHtml(message) + (linkHtml ? ' ' + linkHtml : '');
 		noticeEl.innerHTML = '<div class="notice notice-' + type + ' inline"><p>' + html + '</p></div>';
 	}
 
@@ -351,9 +358,10 @@ class Allegro_Settings implements Feature {
 				.catch(function () {
 					setStep(stepCors, 'error');
 					setBadge('corsWarning');
-					showNotice('warning',
-						cfg.l10n.corsMessage +
-						'<a href="' + cfg.docsUrl + '" target="_blank" rel="noopener noreferrer">' + cfg.l10n.docsLinkText + '</a>.'
+					showNotice(
+						'warning',
+						cfg.l10n.corsMessage,
+						'<a href="' + cfg.docsUrl + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(cfg.l10n.docsLinkText) + '</a>.'
 					);
 				})
 				.finally(function () {
