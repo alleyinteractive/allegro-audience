@@ -5,7 +5,7 @@
  * Description: WordPress Plugin to include Allegro Audience on your site.
  * Version: 0.1.0
  * Author: Allegro Audience
- * Author URI: https://github.com/alleyinteractive/allegro-audience
+ * Author URI: https://allegroaudience.com/
  * Requires at least: 6.5
  * Requires PHP: 8.3
  * Tested up to: 6.7
