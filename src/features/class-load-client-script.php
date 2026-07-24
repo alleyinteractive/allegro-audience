@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Alley\WP\Allegro_Audience\Features;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Injects the Allegro client.js script tag in wp_head on the frontend.
  */
