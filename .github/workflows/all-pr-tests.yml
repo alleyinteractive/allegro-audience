@@ -46,6 +46,10 @@ jobs:
           wordpress-version: '${{ matrix.wordpress }}'
           skip-services: 'true'
           skip-wordpress-install: 'true'
+          # This plugin ships no production Composer dependencies, so
+          # `composer audit --no-dev` has an empty package set and errors on
+          # newer Composer versions. There is nothing to audit.
+          skip-audit: 'true'
   # This required job ensures that all PR checks have passed before merging.
   all-pr-checks-passed:
     name: All PR checks passed
