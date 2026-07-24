@@ -8,7 +8,9 @@
  * Author URI: https://github.com/alleyinteractive/wp-allegro-audience
  * Requires at least: 6.5
  * Requires PHP: 8.3
- * Tested up to: 7.0
+ * Tested up to: 6.7
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  *
  * Text Domain: wp-allegro-audience
  * Domain Path: /languages/
