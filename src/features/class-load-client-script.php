@@ -2,7 +2,7 @@
 /**
  * Feature: Load_Client_Script
  *
- * @package wp-allegro-audience
+ * @package allegro-audience
  */
 
 declare(strict_types=1);

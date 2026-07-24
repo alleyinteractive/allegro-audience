@@ -1,12 +1,12 @@
 {
-    "name": "alleyinteractive/wp-allegro-audience",
+    "name": "alleyinteractive/allegro-audience",
     "description": "WordPress Plugin to include Allegro Audience on your site.",
     "type": "wordpress-plugin",
     "keywords": [
         "alleyinteractive",
-        "wp-allegro-audience"
+        "allegro-audience"
     ],
-    "homepage": "https://github.com/alleyinteractive/wp-allegro-audience",
+    "homepage": "https://github.com/alleyinteractive/allegro-audience",
     "license": "GPL-2.0-or-later",
     "authors": [
         {

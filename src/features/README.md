@@ -27,7 +27,7 @@ class Hello {
 ```
 
 Register the feature in `src/main.php` and require its file in the plugin
-bootstrap (`wp-allegro-audience.php`):
+bootstrap (`allegro-audience.php`):
 
 ```php
 function main(): void {

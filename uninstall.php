@@ -4,7 +4,7 @@
  *
  * Removes plugin options when the plugin is deleted via the WordPress admin.
  *
- * @package wp-allegro-audience
+ * @package allegro-audience
  */
 
 declare(strict_types=1);

@@ -2,7 +2,7 @@
 /**
  * Allegro Audience Tests: Allegro Settings Feature Test
  *
- * @package wp-allegro-audience
+ * @package allegro-audience
  */
 
 declare(strict_types=1);
@@ -55,7 +55,7 @@ class AllegroSettingsTest extends TestCase {
 	public function test_rest_endpoint_requires_auth(): void {
 		wp_set_current_user( 0 );
 
-		$request = new WP_REST_Request( 'POST', '/wp-allegro-audience/v1/settings' );
+		$request = new WP_REST_Request( 'POST', '/allegro-audience/v1/settings' );
 		$request->set_param( 'tenant_url', 'https://example.com' );
 
 		$response = rest_do_request( $request );
@@ -67,7 +67,7 @@ class AllegroSettingsTest extends TestCase {
 	 * Test that the REST endpoint rejects an empty URL.
 	 */
 	public function test_rest_endpoint_rejects_empty_url(): void {
-		$request = new WP_REST_Request( 'POST', '/wp-allegro-audience/v1/settings' );
+		$request = new WP_REST_Request( 'POST', '/allegro-audience/v1/settings' );
 		$request->set_param( 'tenant_url', '' );
 
 		$response = rest_do_request( $request );
@@ -84,7 +84,7 @@ class AllegroSettingsTest extends TestCase {
 			Mock_Http_Response::create(),
 		);
 
-		$request = new WP_REST_Request( 'POST', '/wp-allegro-audience/v1/settings' );
+		$request = new WP_REST_Request( 'POST', '/allegro-audience/v1/settings' );
 		$request->set_param( 'tenant_url', 'https://not-allegro.example.com' );
 
 		$response = rest_do_request( $request );
@@ -101,7 +101,7 @@ class AllegroSettingsTest extends TestCase {
 			Mock_Http_Response::create()->with_header( 'x-allegro-health', '1' ),
 		);
 
-		$request = new WP_REST_Request( 'POST', '/wp-allegro-audience/v1/settings' );
+		$request = new WP_REST_Request( 'POST', '/allegro-audience/v1/settings' );
 		$request->set_param( 'tenant_url', 'https://my-org.allegrocdp.com' );
 
 		$response = rest_do_request( $request );

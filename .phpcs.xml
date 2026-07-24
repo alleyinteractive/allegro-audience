@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="wp-allegro-audience" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
-  <description>PHP_CodeSniffer standard for wp-allegro-audience.</description>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="allegro-audience" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
+  <description>PHP_CodeSniffer standard for allegro-audience.</description>
 
   <!-- Include Alley Rules -->
   <rule ref="Alley-Interactive" />
