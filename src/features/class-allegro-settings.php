@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Alley\WP\Allegro_Audience\Features;
 
-use Alley\WP\Types\Feature;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -17,7 +16,7 @@ use WP_REST_Response;
 /**
  * Registers the Allegro Audience settings page under Settings → Allegro Audience.
  */
-class Allegro_Settings implements Feature {
+class Allegro_Settings {
 
 	/**
 	 * WordPress option name for the tenant URL.
