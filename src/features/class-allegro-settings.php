@@ -40,8 +40,59 @@ class Allegro_Settings {
 	 */
 	public function boot(): void {
 		add_action( 'admin_menu', $this->add_settings_page( ... ) );
+		add_action( 'admin_enqueue_scripts', $this->enqueue_settings_assets( ... ) );
 		add_action( 'rest_api_init', $this->register_rest_routes( ... ) );
 		add_filter( 'plugin_action_links_allegro-audience/allegro-audience.php', $this->add_settings_link( ... ) );
+	}
+
+	/**
+	 * Enqueue the settings page script and pass configuration to it.
+	 *
+	 * @param string $hook_suffix The current admin page hook suffix.
+	 */
+	public function enqueue_settings_assets( string $hook_suffix ): void {
+		if ( 'settings_page_' . self::PAGE_SLUG !== $hook_suffix ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'allegro-audience-settings',
+			plugins_url( 'settings.js', __FILE__ ),
+			[],
+			WP_ALLEGRO_AUDIENCE_VERSION,
+			true,
+		);
+
+		wp_add_inline_script(
+			'allegro-audience-settings',
+			'window.allegroAudienceSettings = ' . wp_json_encode( $this->settings_config() ) . ';',
+			'before',
+		);
+	}
+
+	/**
+	 * Build the configuration object passed to the settings page script.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function settings_config(): array {
+		return [
+			'tenantUrl' => $this->get_saved_url(),
+			'restUrl'   => rest_url( self::REST_NAMESPACE . '/settings' ),
+			'nonce'     => wp_create_nonce( 'wp_rest' ),
+			'docsUrl'   => 'https://docs.allegrocdp.com/developer/',
+			'l10n'      => [
+				'saving'         => __( 'Saving…', 'allegro-audience' ),
+				'saveVerify'     => __( 'Save & Verify', 'allegro-audience' ),
+				'notConfigured'  => __( 'Not configured', 'allegro-audience' ),
+				'connected'      => __( '● Connected', 'allegro-audience' ),
+				'corsWarning'    => __( '⚠ CORS not configured', 'allegro-audience' ),
+				'successMessage' => __( 'Allegro Audience is connected. client.js will be loaded on every front-end page.', 'allegro-audience' ),
+				'corsMessage'    => __( 'CORS is not configured for this domain. Your Allegro instance needs to allow cross-origin requests from this WordPress site. ', 'allegro-audience' ),
+				'docsLinkText'   => __( 'View developer documentation', 'allegro-audience' ),
+				'networkError'   => __( 'Could not reach the Allegro instance. Please check the URL and try again.', 'allegro-audience' ),
+			],
+		];
 	}
 
 	/**
@@ -168,25 +219,6 @@ class Allegro_Settings {
 		}
 
 		$tenant_url = $this->get_saved_url();
-		$config     = wp_json_encode(
-			[
-				'tenantUrl' => $tenant_url,
-				'restUrl'   => rest_url( self::REST_NAMESPACE . '/settings' ),
-				'nonce'     => wp_create_nonce( 'wp_rest' ),
-				'docsUrl'   => 'https://docs.allegrocdp.com/developer/',
-				'l10n'      => [
-					'saving'         => __( 'Saving…', 'allegro-audience' ),
-					'saveVerify'     => __( 'Save & Verify', 'allegro-audience' ),
-					'notConfigured'  => __( 'Not configured', 'allegro-audience' ),
-					'connected'      => __( '● Connected', 'allegro-audience' ),
-					'corsWarning'    => __( '⚠ CORS not configured', 'allegro-audience' ),
-					'successMessage' => __( 'Allegro Audience is connected. client.js will be loaded on every front-end page.', 'allegro-audience' ),
-					'corsMessage'    => __( 'CORS is not configured for this domain. Your Allegro instance needs to allow cross-origin requests from this WordPress site. ', 'allegro-audience' ),
-					'docsLinkText'   => __( 'View developer documentation', 'allegro-audience' ),
-					'networkError'   => __( 'Could not reach the Allegro instance. Please check the URL and try again.', 'allegro-audience' ),
-				],
-			]
-		);
 		?>
 		<div class="wrap">
 			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
@@ -253,131 +285,5 @@ class Allegro_Settings {
 			#allegro-notice .notice { margin: 12px 0 0; }
 		</style>
 		<?php
-		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-		wp_print_inline_script_tag( $this->inline_script( $config !== false ? $config : '{}' ) );
-		// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
-	}
-
-	/**
-	 * Return the inline JavaScript for the settings page.
-	 *
-	 * @param string $config JSON-encoded configuration object.
-	 */
-	private function inline_script( string $config ): string {
-		return <<<JS
-(function () {
-	var cfg = {$config};
-	var btn = document.getElementById('allegro-save-btn');
-	var input = document.getElementById('allegro-tenant-url');
-	var stepsEl = document.getElementById('allegro-steps');
-	var stepHealth = document.getElementById('allegro-step-health');
-	var stepCors = document.getElementById('allegro-step-cors');
-	var noticeEl = document.getElementById('allegro-notice');
-	var badge = document.getElementById('allegro-badge');
-
-	function setBadge(state) {
-		badge.className = 'badge-' + state;
-		badge.textContent = cfg.l10n[state === 'connected' ? 'connected' : state === 'corsWarning' ? 'corsWarning' : 'notConfigured'];
-	}
-
-	function setStep(el, status) {
-		el.style.display = 'flex';
-		var icon = el.querySelector('.allegro-step-icon');
-		if (status === 'pending') {
-			icon.innerHTML = '<span class="spinner is-active" style="float:none;margin:0;"></span>';
-		} else if (status === 'success') {
-			icon.innerHTML = '<span style="color:#00a32a;font-weight:700;">&#10003;</span>';
-		} else {
-			icon.innerHTML = '<span style="color:#d63638;font-weight:700;">&#10007;</span>';
-		}
-	}
-
-	function escapeHtml(str) {
-		return String(str).replace(/[&<>"']/g, function (ch) {
-			return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
-		});
-	}
-
-	function showNotice(type, message, linkHtml) {
-		var html = escapeHtml(message) + (linkHtml ? ' ' + linkHtml : '');
-		noticeEl.innerHTML = '<div class="notice notice-' + type + ' inline"><p>' + html + '</p></div>';
-	}
-
-	function resetSteps() {
-		stepsEl.style.display = 'none';
-		stepHealth.style.display = 'none';
-		stepCors.style.display = 'none';
-		noticeEl.innerHTML = '';
-	}
-
-	// Show initial badge; auto-run CORS check if a URL is already saved.
-	if (cfg.tenantUrl) {
-		setBadge('notConfigured');
-		fetch(cfg.tenantUrl + '/client.js', { mode: 'cors', cache: 'no-store' })
-			.then(function () { setBadge('connected'); })
-			.catch(function () { setBadge('corsWarning'); });
-	} else {
-		setBadge('notConfigured');
-	}
-
-	btn.addEventListener('click', function () {
-		var url = input.value.trim().replace(/\/+$/, '');
-		if (!url) return;
-
-		btn.disabled = true;
-		btn.textContent = cfg.l10n.saving;
-		resetSteps();
-		stepsEl.style.display = 'block';
-		setStep(stepHealth, 'pending');
-
-		fetch(cfg.restUrl, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': cfg.nonce },
-			body: JSON.stringify({ tenant_url: url }),
-		})
-		.then(function (res) {
-			return res.json().then(function (data) { return { ok: res.ok, data: data }; });
-		})
-		.then(function (result) {
-			if (!result.ok) {
-				setStep(stepHealth, 'error');
-				showNotice('error', result.data.message || cfg.l10n.networkError);
-				btn.disabled = false;
-				btn.textContent = cfg.l10n.saveVerify;
-				return;
-			}
-
-			setStep(stepHealth, 'success');
-			setStep(stepCors, 'pending');
-
-			fetch(url + '/client.js', { mode: 'cors', cache: 'no-store' })
-				.then(function () {
-					setStep(stepCors, 'success');
-					setBadge('connected');
-					showNotice('success', cfg.l10n.successMessage);
-				})
-				.catch(function () {
-					setStep(stepCors, 'error');
-					setBadge('corsWarning');
-					showNotice(
-						'warning',
-						cfg.l10n.corsMessage,
-						'<a href="' + cfg.docsUrl + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(cfg.l10n.docsLinkText) + '</a>.'
-					);
-				})
-				.finally(function () {
-					btn.disabled = false;
-					btn.textContent = cfg.l10n.saveVerify;
-				});
-		})
-		.catch(function () {
-			setStep(stepHealth, 'error');
-			showNotice('error', cfg.l10n.networkError);
-			btn.disabled = false;
-			btn.textContent = cfg.l10n.saveVerify;
-		});
-	});
-}());
-JS;
 	}
 }
