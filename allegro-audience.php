@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Allegro Audience
- * Plugin URI: https://github.com/alleyinteractive/allegro-audience
+ * Plugin URI: https://allegroaudience.com/
  * Description: WordPress Plugin to include Allegro Audience on your site.
  * Version: 0.1.0
- * Author: Allegro Audience
- * Author URI: https://allegroaudience.com/
+ * Author: Alley Interactive
+ * Author URI: https://alley.com/
  * Requires at least: 6.5
  * Requires PHP: 8.3
  * Tested up to: 7.0
