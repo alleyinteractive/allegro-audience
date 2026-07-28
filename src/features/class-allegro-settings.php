@@ -50,7 +50,7 @@ class Allegro_Settings {
 	 *
 	 * @param string $hook_suffix The current admin page hook suffix.
 	 */
-	public function enqueue_settings_assets( string $hook_suffix ): void {
+	public function enqueue_settings_assets( $hook_suffix ): void {
 		if ( 'settings_page_' . self::PAGE_SLUG !== $hook_suffix ) {
 			return;
 		}
