@@ -2,25 +2,22 @@
 /**
  * The main plugin function
  *
- * @package wp-allegro-audience
+ * @package allegro-audience
  */
 
 declare(strict_types=1);
 
-namespace Alley\WP\Allegro_Audience;
+namespace Allegro_Audience;
 
-use Alley\WP\Allegro_Audience\Features\Allegro_Settings;
-use Alley\WP\Allegro_Audience\Features\Load_Client_Script;
-use Alley\WP\Features\Group;
+use Allegro_Audience\Features\Allegro_Settings;
+use Allegro_Audience\Features\Load_Client_Script;
+
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Instantiate the plugin.
  */
 function main(): void {
-	$plugin = new Group(
-		new Allegro_Settings(),
-		new Load_Client_Script(),
-	);
-
-	$plugin->boot();
+	( new Allegro_Settings() )->boot();
+	( new Load_Client_Script() )->boot();
 }

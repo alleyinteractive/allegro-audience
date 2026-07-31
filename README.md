@@ -13,21 +13,7 @@
 
 # Allegro Audience WordPress Plugin
 
-Contributors: alleyinteractive
-
-Tags: alleyinteractive, allegro, audience
-
-Stable tag: 0.1.0
-
-Requires at least: 6.5
-
-Tested up to: 7.0
-
-Requires PHP: 8.3
-
-License: GPL v2 or later
-
-[![Testing Suite](https://github.com/alleyinteractive/wp-allegro-audience/actions/workflows/all-pr-tests.yml/badge.svg?branch=develop)](https://github.com/alleyinteractive/wp-allegro-audience/actions/workflows/all-pr-tests.yml)
+[![Testing Suite](https://github.com/alleyinteractive/allegro-audience/actions/workflows/all-pr-tests.yml/badge.svg?branch=develop)](https://github.com/alleyinteractive/allegro-audience/actions/workflows/all-pr-tests.yml)
 
 Connect your WordPress site to [Allegro Audience](https://allegrocdp.com/). Enter your organization URL, verify the connection, and Allegro Audience's `client.js` is automatically injected on every front-end page.
 
@@ -36,7 +22,7 @@ Connect your WordPress site to [Allegro Audience](https://allegrocdp.com/). Ente
 Install via Composer:
 
 ```bash
-composer require alleyinteractive/wp-allegro-audience
+composer require alleyinteractive/allegro-audience
 ```
 
 Or upload the plugin ZIP through **Plugins → Add New** in WordPress.

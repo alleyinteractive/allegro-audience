@@ -2,16 +2,16 @@
 /**
  * LoadClientScriptTest
  *
- * @package wp-allegro-audience
+ * @package allegro-audience
  */
 
 declare(strict_types=1);
 
-namespace Alley\WP\Allegro_Audience\Tests\Feature;
+namespace Allegro_Audience\Tests\Feature;
 
-use Alley\WP\Allegro_Audience\Features\Allegro_Settings;
-use Alley\WP\Allegro_Audience\Features\Load_Client_Script;
-use Alley\WP\Allegro_Audience\Tests\TestCase;
+use Allegro_Audience\Features\Allegro_Settings;
+use Allegro_Audience\Features\Load_Client_Script;
+use Allegro_Audience\Tests\TestCase;
 
 /**
  * Tests for the Load_Client_Script feature.
@@ -27,11 +27,9 @@ class LoadClientScriptTest extends TestCase {
 		$feature = new Load_Client_Script();
 		$feature->boot();
 
-		ob_start();
-		do_action( 'wp_head' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-		$output = (string) ob_get_clean();
-
-		$this->assertStringNotContainsString( 'client.js', $output );
+		$this->get( '/' )
+			->assertOk()
+			->assertQuerySelectorMissing( 'script[src="https://my-org.allegrocdp.com/client.js"]' );
 	}
 
 	/**
@@ -43,11 +41,8 @@ class LoadClientScriptTest extends TestCase {
 		$feature = new Load_Client_Script();
 		$feature->boot();
 
-		ob_start();
-		do_action( 'wp_head' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-		$output = (string) ob_get_clean();
-
-		$this->assertStringContainsString( '/client.js', $output );
-		$this->assertStringContainsString( 'my-org.allegrocdp.com', $output );
+		$this->get( '/' )
+			->assertOk()
+			->assertQuerySelectorExists( 'script[src="https://my-org.allegrocdp.com/client.js"]' );
 	}
 }

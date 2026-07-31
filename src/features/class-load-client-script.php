@@ -2,35 +2,31 @@
 /**
  * Feature: Load_Client_Script
  *
- * @package wp-allegro-audience
+ * @package allegro-audience
  */
 
 declare(strict_types=1);
 
-namespace Alley\WP\Allegro_Audience\Features;
+namespace Allegro_Audience\Features;
 
-use Alley\WP\Types\Feature;
+defined( 'ABSPATH' ) || exit;
 
 /**
- * Injects the Allegro client.js script tag in wp_head on the frontend.
+ * Enqueues the Allegro client.js script on the front end.
  */
-class Load_Client_Script implements Feature {
+class Load_Client_Script {
 
 	/**
 	 * Boot the feature.
 	 */
 	public function boot(): void {
-		add_action( 'wp_head', $this->output_client_script( ... ), 1 );
+		add_action( 'wp_enqueue_scripts', $this->enqueue_client_script( ... ) );
 	}
 
 	/**
-	 * Output the Allegro client.js script tag.
+	 * Enqueue the Allegro client.js script for the configured tenant.
 	 */
-	public function output_client_script(): void {
-		if ( is_admin() ) {
-			return;
-		}
-
+	public function enqueue_client_script(): void {
 		$raw_url    = get_option( Allegro_Settings::OPTION_TENANT_URL, '' );
 		$tenant_url = is_string( $raw_url ) ? $raw_url : '';
 
@@ -38,6 +34,14 @@ class Load_Client_Script implements Feature {
 			return;
 		}
 
-		printf( '<script src="%s"></script>' . "\n", esc_url( $tenant_url . '/client.js' ) ); // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
+		wp_register_script(
+			'allegro-audience-client',
+			$tenant_url . '/client.js',
+			[],
+			null, // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+			false,
+		);
+
+		wp_enqueue_script( 'allegro-audience-client' );
 	}
 }
