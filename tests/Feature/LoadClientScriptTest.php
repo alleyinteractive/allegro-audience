@@ -27,11 +27,9 @@ class LoadClientScriptTest extends TestCase {
 		$feature = new Load_Client_Script();
 		$feature->boot();
 
-		ob_start();
-		do_action( 'wp_head' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-		$output = (string) ob_get_clean();
-
-		$this->assertStringNotContainsString( 'client.js', $output );
+		$this->get( '/' )
+			->assertOk()
+			->assertQuerySelectorMissing( 'script[src="https://my-org.allegrocdp.com/client.js"]' );
 	}
 
 	/**
@@ -43,11 +41,8 @@ class LoadClientScriptTest extends TestCase {
 		$feature = new Load_Client_Script();
 		$feature->boot();
 
-		ob_start();
-		do_action( 'wp_head' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-		$output = (string) ob_get_clean();
-
-		$this->assertStringContainsString( '/client.js', $output );
-		$this->assertStringContainsString( 'my-org.allegrocdp.com', $output );
+		$this->get( '/' )
+			->assertOk()
+			->assertQuerySelectorExists( 'script[src="https://my-org.allegrocdp.com/client.js"]' );
 	}
 }

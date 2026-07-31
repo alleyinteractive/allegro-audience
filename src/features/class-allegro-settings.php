@@ -55,13 +55,15 @@ class Allegro_Settings {
 			return;
 		}
 
-		wp_enqueue_script(
+		wp_register_script(
 			'allegro-audience-settings',
 			plugins_url( 'settings.js', __FILE__ ),
 			[],
 			WP_ALLEGRO_AUDIENCE_VERSION,
 			true,
 		);
+
+		wp_enqueue_script( 'allegro-audience-settings' );
 
 		wp_add_inline_script(
 			'allegro-audience-settings',

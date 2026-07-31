@@ -34,12 +34,14 @@ class Load_Client_Script {
 			return;
 		}
 
-		wp_enqueue_script(
+		wp_register_script(
 			'allegro-audience-client',
 			$tenant_url . '/client.js',
 			[],
-			WP_ALLEGRO_AUDIENCE_VERSION,
+			null, // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 			false,
 		);
+
+		wp_enqueue_script( 'allegro-audience-client' );
 	}
 }
