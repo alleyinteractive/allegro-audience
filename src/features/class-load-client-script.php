@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Alley\WP\Allegro_Audience\Features;
+namespace Allegro_Audience\Features;
 
 defined( 'ABSPATH' ) || exit;
 

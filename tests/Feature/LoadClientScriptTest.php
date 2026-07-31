@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace Alley\WP\Allegro_Audience\Tests\Feature;
+namespace Allegro_Audience\Tests\Feature;
 
-use Alley\WP\Allegro_Audience\Features\Allegro_Settings;
-use Alley\WP\Allegro_Audience\Features\Load_Client_Script;
-use Alley\WP\Allegro_Audience\Tests\TestCase;
+use Allegro_Audience\Features\Allegro_Settings;
+use Allegro_Audience\Features\Load_Client_Script;
+use Allegro_Audience\Tests\TestCase;
 
 /**
  * Tests for the Load_Client_Script feature.

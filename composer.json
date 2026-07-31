@@ -19,7 +19,6 @@
     },
     "require-dev": {
         "alleyinteractive/alley-coding-standards": "^2.0",
-        "alleyinteractive/composer-wordpress-autoloader": "^1.0",
         "mantle-framework/testkit": "^1.15",
         "rector/rector": "^2.0",
         "szepeviktor/phpstan-wordpress": "^2.0"
@@ -34,14 +33,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Alley\\WP\\Allegro_Audience\\Tests\\": "tests"
-        }
-    },
-    "extra": {
-        "wordpress-autoloader": {
-            "autoload": {
-                "Alley\\WP\\Allegro_Audience\\": "src"
-            }
+            "Allegro_Audience\\Tests\\": "tests"
         }
     },
     "minimum-stability": "dev",

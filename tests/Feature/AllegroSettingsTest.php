@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Alley\WP\Allegro_Audience\Tests\Feature;
+namespace Allegro_Audience\Tests\Feature;
 
-use Alley\WP\Allegro_Audience\Features\Allegro_Settings;
-use Alley\WP\Allegro_Audience\Tests\TestCase;
+use Allegro_Audience\Features\Allegro_Settings;
+use Allegro_Audience\Tests\TestCase;
 use Mantle\Testing\Mock_Http_Response;
 use WP_REST_Request;
 

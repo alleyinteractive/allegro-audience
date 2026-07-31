@@ -17,21 +17,16 @@
  * @package allegro-audience
  */
 
-namespace Alley\WP\Allegro_Audience;
+namespace Allegro_Audience;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Root directory to this plugin.
- */
-define( 'WP_ALLEGRO_AUDIENCE_DIR', __DIR__ );
-
-/**
  * Current plugin version, used for asset cache-busting.
  */
-define( 'WP_ALLEGRO_AUDIENCE_VERSION', '0.1.0' );
+define( 'ALLEGRO_AUDIENCE_VERSION', '0.1.0' );
 
 // Load the plugin's runtime classes (no Composer autoloader required).
 require_once __DIR__ . '/src/features/class-allegro-settings.php';

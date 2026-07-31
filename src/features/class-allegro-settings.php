@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Alley\WP\Allegro_Audience\Features;
+namespace Allegro_Audience\Features;
 
 use WP_Error;
 use WP_REST_Request;
@@ -59,7 +59,7 @@ class Allegro_Settings {
 			'allegro-audience-settings',
 			plugins_url( 'settings.js', __FILE__ ),
 			[],
-			WP_ALLEGRO_AUDIENCE_VERSION,
+			ALLEGRO_AUDIENCE_VERSION,
 			true,
 		);
 

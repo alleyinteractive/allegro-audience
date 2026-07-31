@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Alley\WP\Allegro_Audience\Tests;
+namespace Allegro_Audience\Tests;
 
 use Mantle\Testing\Concerns\Prevent_Remote_Requests;
 use Mantle\Testkit\Test_Case as TestkitTest_Case;
