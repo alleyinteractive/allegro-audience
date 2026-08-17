@@ -1,5 +1,5 @@
 === Allegro Audience ===
-Contributors: alleyinteractive
+Contributors: alleyinteractive, sean212
 Tags: analytics, audience, cdp, allegro
 Requires at least: 6.5
 Tested up to: 7.0
