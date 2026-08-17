@@ -50,7 +50,8 @@ re-verify.
 
 == Screenshots ==
 
-1. The Allegro Audience dashboard, showing real-time engagement, audience growth, and login activity for a connected site.
+1. The Settings → Allegro Audience screen, where you enter and verify your Allegro organization URL.
+2. The Allegro Audience dashboard, showing real-time engagement, audience growth, and login activity for a connected site.
 
 == External services ==
 
