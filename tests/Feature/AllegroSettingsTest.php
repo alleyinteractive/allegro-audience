@@ -47,6 +47,27 @@ class AllegroSettingsTest extends TestCase {
 
 		$this->assertStringContainsString( 'allegro-tenant-url', $output );
 		$this->assertStringContainsString( 'allegro-save-btn', $output );
+		$this->assertStringNotContainsString( '<style', $output );
+	}
+
+	/**
+	 * Test that the settings page assets are enqueued rather than printed inline.
+	 */
+	public function test_settings_page_assets_are_enqueued(): void {
+		( new Allegro_Settings() )->enqueue_settings_assets( 'settings_page_' . Allegro_Settings::PAGE_SLUG );
+
+		$this->assertTrue( wp_style_is( 'allegro-audience-settings', 'enqueued' ) );
+		$this->assertTrue( wp_script_is( 'allegro-audience-settings', 'enqueued' ) );
+	}
+
+	/**
+	 * Test that the settings assets are not enqueued on other admin screens.
+	 */
+	public function test_settings_page_assets_not_enqueued_elsewhere(): void {
+		( new Allegro_Settings() )->enqueue_settings_assets( 'edit.php' );
+
+		$this->assertFalse( wp_style_is( 'allegro-audience-settings', 'enqueued' ) );
+		$this->assertFalse( wp_script_is( 'allegro-audience-settings', 'enqueued' ) );
 	}
 
 	/**

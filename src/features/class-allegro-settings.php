@@ -55,6 +55,15 @@ class Allegro_Settings {
 			return;
 		}
 
+		wp_register_style(
+			'allegro-audience-settings',
+			plugins_url( 'settings.css', __FILE__ ),
+			[],
+			ALLEGRO_AUDIENCE_VERSION,
+		);
+
+		wp_enqueue_style( 'allegro-audience-settings' );
+
 		wp_register_script(
 			'allegro-audience-settings',
 			plugins_url( 'settings.js', __FILE__ ),
@@ -273,19 +282,6 @@ class Allegro_Settings {
 				<div id="allegro-notice" role="alert"></div>
 			</div>
 		</div>
-
-		<style>
-			.allegro-card { max-width: 640px; padding: 16px 20px; }
-			.allegro-card h2 { display: flex; align-items: center; justify-content: space-between; margin-top: 0; font-size: 14px; }
-			#allegro-badge { font-size: 12px; font-weight: 500; padding: 2px 10px; border-radius: 3px; }
-			#allegro-badge.badge-not-configured { background: #dcdcde; color: #50575e; }
-			#allegro-badge.badge-connected { background: #d8f0d8; color: #1a6a1a; }
-			#allegro-badge.badge-cors-warning { background: #fcf0d8; color: #8a5c0a; }
-			#allegro-steps { display: none; margin: 12px 0 0; border-left: 3px solid #dcdcde; padding-left: 12px; }
-			.allegro-step { display: none; align-items: center; gap: 8px; margin: 6px 0; font-size: 13px; }
-			.allegro-step-icon { display: flex; align-items: center; width: 20px; }
-			#allegro-notice .notice { margin: 12px 0 0; }
-		</style>
 		<?php
 	}
 }
