@@ -35,20 +35,29 @@ jobs:
         with:
           ref: ${{ inputs.tag || github.event.release.tag_name }}
 
-      - name: Verify the tag, plugin version, and stable tag match
+      - name: Verify every version string matches the tag
         env:
           TAG: ${{ inputs.tag || github.event.release.tag_name }}
         run: |
           VERSION="${TAG#v}"
           PLUGIN_VERSION=$(grep -m1 -E '^\s*\*?\s*Version:' allegro-audience.php | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+')
+          VERSION_CONSTANT=$(grep -m1 "ALLEGRO_AUDIENCE_VERSION" allegro-audience.php | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+')
           STABLE_TAG=$(grep -m1 -E '^Stable tag:' readme.txt | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+')
 
           echo "Tag: $TAG (version $VERSION)"
           echo "Plugin header version: $PLUGIN_VERSION"
+          echo "ALLEGRO_AUDIENCE_VERSION: $VERSION_CONSTANT"
           echo "readme.txt stable tag: $STABLE_TAG"
 
           if [[ "$VERSION" != "$PLUGIN_VERSION" ]]; then
             echo "::error::Tag $TAG does not match the plugin header version $PLUGIN_VERSION."
+            exit 1
+          fi
+
+          # The constant is the asset cache-busting version, so a stale value
+          # ships new assets under the previous version's URL.
+          if [[ "$VERSION" != "$VERSION_CONSTANT" ]]; then
+            echo "::error::Tag $TAG does not match ALLEGRO_AUDIENCE_VERSION $VERSION_CONSTANT."
             exit 1
           fi
 

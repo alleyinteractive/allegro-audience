@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Current plugin version, used for asset cache-busting.
  */
-define( 'ALLEGRO_AUDIENCE_VERSION', '0.1.0' );
+define( 'ALLEGRO_AUDIENCE_VERSION', '0.1.1' );
 
 // Load the plugin's runtime classes (no Composer autoloader required).
 require_once __DIR__ . '/src/features/class-allegro-settings.php';
