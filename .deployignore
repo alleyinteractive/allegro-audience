@@ -1,9 +1,12 @@
+# Excluded from the *-built branches. `.github` is deliberately kept: release
+# tags point at the built branch, and GitHub resolves a release-triggered
+# workflow from the tag's tree, so stripping it stops the WordPress.org deploy
+# from ever firing. `.distignore` keeps it out of the WordPress.org release.
 .claude
 .DS_Store
 .editorconfig
 .git
 .gitattributes
-.github
 .gitignore
 .phpcs
 .phpcs.xml
