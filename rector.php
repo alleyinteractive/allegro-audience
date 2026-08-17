@@ -42,17 +42,9 @@ return RectorConfig::configure()
 	 */
 	->withPhpSets()
 	->withSets( [
-		PHPUnitSetList::PHPUNIT_100,
-		PHPUnitSetList::PHPUNIT_110,
+		// Applies the rules for the PHPUnit version in composer.lock. Replaces
+		// the per-version sets (PHPUNIT_100, PHPUNIT_110) dropped in
+		// rector-phpunit 3.0.
+		PHPUnitSetList::COMPOSER_BASED,
 		PHPUnitSetList::ANNOTATIONS_TO_ATTRIBUTES,
-	] )
-	/**
-	 * --------------------------------------------------------------------------
-	 * Rector rules to skip.
-	 * --------------------------------------------------------------------------
-	 *
-	 * @link https://getrector.com/documentation/ignoring-rules-or-paths
-	 */
-	->withSkip( [
-		Rector\Strict\Rector\Empty_\DisallowedEmptyRuleFixerRector::class,
 	] );
