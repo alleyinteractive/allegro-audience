@@ -15,6 +15,7 @@
 .scaffolder
 .scoper
 .superpowers
+.wordpress-org
 .wp-env.json
 *.sql
 *.tar.gz

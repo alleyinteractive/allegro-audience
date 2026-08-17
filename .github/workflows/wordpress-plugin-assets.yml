@@ -1,0 +1,38 @@
+name: Update WordPress.org Assets
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - .wordpress-org/**
+      - readme.txt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Shared with the release deploy so an asset push and a version deploy never
+# commit to Subversion at the same time.
+concurrency:
+  group: wordpress-org-deploy
+  cancel-in-progress: false
+
+jobs:
+  assets:
+    name: "Update WordPress.org Assets"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Update readme and assets on WordPress.org
+        uses: 10up/action-wordpress-plugin-asset-update@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: allegro-audience
+          ASSETS_DIR: .wordpress-org
+          # Subversion trunk holds the built plugin, so this source branch
+          # always differs from it. Without this the action bails on every run.
+          IGNORE_OTHER_FILES: true

@@ -13,6 +13,9 @@
 /.phpunit.result.cache
 /.scaffolder
 /.superpowers
+# WordPress.org directory assets live in the SVN `assets` folder, not in the
+# plugin itself.
+/.wordpress-org
 /.wp-env.json
 /CLAUDE.md
 /Makefile

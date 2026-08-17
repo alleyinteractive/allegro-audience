@@ -1,5 +1,5 @@
 === Allegro Audience ===
-Contributors: alleyinteractive, sean212
+Contributors: alleyinteractive
 Tags: analytics, audience, cdp, allegro
 Requires at least: 6.5
 Tested up to: 7.0
@@ -47,6 +47,10 @@ documentation at https://docs.allegrocdp.com/developer/ for details.
 Your Allegro instance must allow cross-origin requests from your WordPress
 site's domain. Update the CORS configuration on your Allegro instance, then
 re-verify.
+
+== Screenshots ==
+
+1. The Allegro Audience dashboard, showing real-time engagement, audience growth, and login activity for a connected site.
 
 == External services ==
 
