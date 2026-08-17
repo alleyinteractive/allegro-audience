@@ -2,8 +2,9 @@ name: Deploy to WordPress.org
 
 on:
   release:
+    # `released` skips pre-releases, which should not reach WordPress.org.
     types:
-      - published
+      - released
   workflow_dispatch:
     inputs:
       tag:
