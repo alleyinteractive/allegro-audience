@@ -21,11 +21,11 @@
 		el.style.display = 'flex';
 		var icon = el.querySelector('.allegro-step-icon');
 		if (status === 'pending') {
-			icon.innerHTML = '<span class="spinner is-active" style="float:none;margin:0;"></span>';
+			icon.innerHTML = '<span class="spinner is-active allegro-spinner"></span>';
 		} else if (status === 'success') {
-			icon.innerHTML = '<span style="color:#00a32a;font-weight:700;">&#10003;</span>';
+			icon.innerHTML = '<span class="allegro-step-success">&#10003;</span>';
 		} else {
-			icon.innerHTML = '<span style="color:#d63638;font-weight:700;">&#10007;</span>';
+			icon.innerHTML = '<span class="allegro-step-error">&#10007;</span>';
 		}
 	}
 

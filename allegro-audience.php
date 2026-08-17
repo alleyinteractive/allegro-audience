@@ -3,7 +3,7 @@
  * Plugin Name: Allegro Audience
  * Plugin URI: https://allegroaudience.com/
  * Description: WordPress Plugin to include Allegro Audience on your site.
- * Version: 0.1.0
+ * Version: 0.1.1
  * Author: Alley Interactive
  * Author URI: https://alley.com/
  * Requires at least: 6.5
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Current plugin version, used for asset cache-busting.
  */
-define( 'ALLEGRO_AUDIENCE_VERSION', '0.1.0' );
+define( 'ALLEGRO_AUDIENCE_VERSION', '0.1.1' );
 
 // Load the plugin's runtime classes (no Composer autoloader required).
 require_once __DIR__ . '/src/features/class-allegro-settings.php';
