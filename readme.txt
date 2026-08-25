@@ -12,7 +12,7 @@ Load Allegro Audience on your WordPress site and connect it to your Allegro CDP 
 
 == Description ==
 
-Allegro Audience connects your WordPress site to your Allegro CDP instance. After
+[Allegro Audience](https://allegroaudience.com/) connects your WordPress site to your Allegro CDP instance. After
 you enter and verify your Allegro organization URL on the settings screen, the
 plugin loads the Allegro `client.js` script on every front-end page so Allegro can
 collect audience data for your site.

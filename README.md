@@ -15,7 +15,7 @@
 
 [![Testing Suite](https://github.com/alleyinteractive/allegro-audience/actions/workflows/all-pr-tests.yml/badge.svg?branch=develop)](https://github.com/alleyinteractive/allegro-audience/actions/workflows/all-pr-tests.yml)
 
-Connect your WordPress site to [Allegro Audience](https://allegrocdp.com/). Enter your organization URL, verify the connection, and Allegro Audience's `client.js` is automatically injected on every front-end page.
+Connect your WordPress site to [Allegro Audience](https://allegroaudience.com/). Enter your organization URL, verify the connection, and Allegro Audience's `client.js` is automatically injected on every front-end page.
 
 ## Installation
 
