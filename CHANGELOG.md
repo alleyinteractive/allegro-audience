@@ -2,6 +2,10 @@
 
 All notable changes to `Allegro Audience` will be documented in this file.
 
+## 1.0.1
+
+- Mark as tested up to WordPress 7.1.
+
 ## 1.0.0
 
 Initial release.

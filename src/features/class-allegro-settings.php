@@ -66,7 +66,7 @@ class Allegro_Settings {
 
 		wp_register_script(
 			'allegro-audience-settings',
-			plugins_url( 'settings.js', __FILE__ ),
+			plugins_url( 'settings.js', __FILE__ ) ?: false,
 			[],
 			ALLEGRO_AUDIENCE_VERSION,
 			true,
